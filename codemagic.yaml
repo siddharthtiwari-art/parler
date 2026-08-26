@@ -3,7 +3,7 @@ workflows:
     name: Parler Android Build
     max_build_duration: 60
     environment:
-      flutter: stable
+      flutter: 3.44.0
       java: 17
     scripts:
       - name: Get packages
@@ -11,7 +11,7 @@ workflows:
       - name: Analyze
         script: flutter analyze --no-fatal-infos --no-fatal-warnings
       - name: Build APK
-        script: flutter build apk --debug --target lib/main.dart --android-skip-build-dependency-validation
+        script: flutter build apk --debug --target lib/main.dart
     artifacts:
       - build/app/outputs/flutter-apk/*.apk
     publishing:
