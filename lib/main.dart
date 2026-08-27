@@ -24,7 +24,9 @@ class ParlerApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Parler',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.dark,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
         home: const HomeScreen(),
       ),
     );
