@@ -129,3 +129,4 @@ class _StoryCard extends StatelessWidget {
     return '$total vocab words';
   }
 }
+
