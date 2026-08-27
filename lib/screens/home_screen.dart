@@ -4,6 +4,7 @@ import '../models/word.dart';
 import '../services/progress_service.dart';
 import '../utils/theme.dart';
 import 'session_screen.dart';
+import 'stories_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,8 +16,9 @@ class HomeScreen extends StatelessWidget {
     for (final cat in categories) {
       grouped.putIfAbsent(cat.group, () => []).add(cat);
     }
+
     return Scaffold(
-      backgroundColor: AppTheme.bg,
+      backgroundColor: AC.bg(context),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
@@ -26,8 +28,7 @@ class HomeScreen extends StatelessWidget {
             ...grouped.entries.map((entry) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(entry.key.toUpperCase(),
-                    style: const TextStyle(color: AppTheme.textMuted, fontSize: 10, letterSpacing: 0.8)),
+                _sectionLabel(context, entry.key),
                 const SizedBox(height: 10),
                 GridView.count(
                   crossAxisCount: 2,
@@ -43,6 +44,9 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 24),
               ],
             )),
+            _sectionLabel(context, 'Explore'),
+            const SizedBox(height: 10),
+            const _StoriesCard(),
           ],
         ),
       ),
@@ -54,35 +58,61 @@ class HomeScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          const Text('🇫🇷 Parler',
-              style: TextStyle(color: AppTheme.textPrimary, fontSize: 26,
-                  fontWeight: FontWeight.w700, letterSpacing: -0.5)),
+          Text(
+            '🇫🇷 Parler',
+            style: TextStyle(
+              color: AC.textPrimary(context),
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
+              letterSpacing: -0.5,
+            ),
+          ),
           const SizedBox(height: 2),
-          const Text('What would you like to learn?',
-              style: TextStyle(color: AppTheme.textMuted, fontSize: 13)),
+          Text(
+            'What would you like to learn?',
+            style: TextStyle(color: AC.textMuted(context), fontSize: 13),
+          ),
         ]),
         const Spacer(),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: AppTheme.bgCard,
+            color: AC.bgCard(context),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.bgCardBorder, width: 0.5),
+            border: Border.all(color: AC.border(context), width: 0.5),
           ),
           child: Row(children: [
-            Text('${progress.totalStreak}',
-                style: const TextStyle(color: AppTheme.amber, fontSize: 20, fontWeight: FontWeight.w700)),
+            Text(
+              '${progress.totalStreak}',
+              style: const TextStyle(
+                color: AppColors.amber,
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
             const SizedBox(width: 6),
-            const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('🔥', style: TextStyle(fontSize: 14)),
-              Text('streak', style: TextStyle(color: AppTheme.textMuted, fontSize: 9)),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('🔥', style: TextStyle(fontSize: 14)),
+              Text('streak', style: TextStyle(color: AC.textMuted(context), fontSize: 9)),
             ]),
           ]),
         ),
       ],
     );
   }
+
+  Widget _sectionLabel(BuildContext context, String label) => Text(
+    label.toUpperCase(),
+    style: TextStyle(
+      color: AC.textMuted(context),
+      fontSize: 10,
+      letterSpacing: 0.8,
+      fontWeight: FontWeight.w500,
+    ),
+  );
 }
+
+// ── Category card ────────────────────────────────────────────────────────────
 
 class _CategoryCard extends StatelessWidget {
   final Category cat;
@@ -115,25 +145,69 @@ class _CategoryCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: AppTheme.amber.withValues(alpha: 0.15),
+                  color: AppColors.amber.withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Text('Review', style: TextStyle(color: AppTheme.amber, fontSize: 9)),
+                child: const Text('Review',
+                    style: TextStyle(color: AppColors.amber, fontSize: 9)),
               ),
           ]),
           const Spacer(),
-          Text(cat.name, style: TextStyle(color: colors.fg, fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(cat.name,
+              style: TextStyle(
+                  color: colors.fg, fontSize: 13, fontWeight: FontWeight.w600)),
           const SizedBox(height: 3),
-          Text('$learned / $total words', style: TextStyle(color: colors.muted, fontSize: 10)),
+          Text('$learned / $total words',
+              style: TextStyle(color: colors.muted, fontSize: 10)),
           const SizedBox(height: 6),
           ClipRRect(
             borderRadius: BorderRadius.circular(2),
             child: LinearProgressIndicator(
-              value: pct, minHeight: 3,
+              value: pct,
+              minHeight: 3,
               backgroundColor: colors.border,
               valueColor: AlwaysStoppedAnimation(colors.fg),
             ),
           ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Stories card ─────────────────────────────────────────────────────────────
+
+class _StoriesCard extends StatelessWidget {
+  const _StoriesCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = catColorMap['stories']!;
+    return GestureDetector(
+      onTap: () => Navigator.push(context,
+          MaterialPageRoute(builder: (_) => const StoriesScreen())),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        decoration: BoxDecoration(
+          color: colors.bg,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: colors.border, width: 0.8),
+        ),
+        child: Row(children: [
+          const Text('📖', style: TextStyle(fontSize: 30)),
+          const SizedBox(width: 14),
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text('Stories',
+                style: TextStyle(
+                    color: colors.fg,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700)),
+            const SizedBox(height: 2),
+            Text('6 stories · tap words for meaning',
+                style: TextStyle(color: colors.muted, fontSize: 11)),
+          ]),
+          const Spacer(),
+          Icon(Icons.arrow_forward_ios_rounded, color: colors.muted, size: 14),
         ]),
       ),
     );
