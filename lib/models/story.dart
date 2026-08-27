@@ -38,3 +38,4 @@ class Story {
     required this.pages,
   });
 }
+
