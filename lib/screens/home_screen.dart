@@ -212,4 +212,5 @@ class _StoriesCard extends StatelessWidget {
       ),
     );
   }
+
 }
