@@ -10,13 +10,13 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.light,
   ));
   runApp(const ParlerApp());
 }
 
 class ParlerApp extends StatelessWidget {
   const ParlerApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
